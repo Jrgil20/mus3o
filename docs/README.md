@@ -34,6 +34,7 @@ Equipo 5 del Platanus Hack 26. Alcance de la demo: solo escritorio (la rama VR a
 | [revision-dev.md](./revision-dev.md) | Informe de revisión formal de la rama `dev`: hallazgos de concurrencia, memoria e I/O (todos resueltos) | Vas a auditar o consultar el estado de hallazgos de `dev` |
 | [auditoria-seguridad-y-fallbacks.md](./auditoria-seguridad-y-fallbacks.md) | Auditoría de fallos delicados/medios, resiliencia WebGL, upstream de IA y fallbacks desacoplados | Analizas estabilidad, resiliencia o arquitectura de contingencia |
 | [desarrollo.md](./desarrollo.md) | Cómo correr, probar, variables de entorno, flujo de git, errores comunes | Vas a levantar el proyecto o abrir un PR |
+| [equipo/](./equipo/README.md) | Registro de integrantes, roles e informes individuales de colaboración técnica | Quieres consultar el impacto y autoría de los módulos del equipo |
 
 Documentos previos (decisiones de producto y de seguridad, no cambian con el código):
 
