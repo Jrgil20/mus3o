@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ResolvedImageSchema, type ImageSearch, type Museum, type ResolvedImage, type Room } from '@mus3o/shared'
+import { buildRoomGraphFromMuseum, getRoomDistances } from '../palace/roomStreaming'
 
 const cache = new Map<string, Promise<ResolvedImage | null>>()
 // Resultados ya resueltos: se leen de forma sincrónica para no mostrar "cargando" ni un instante.
@@ -196,6 +197,72 @@ export async function prefetchPalaceImages(palace: Museum): Promise<void> {
     }
   }
   await Promise.all(Array.from({ length: Math.min(PREFETCH_CONCURRENCY, queue.length) }, worker))
+}
+
+/** Libera las imágenes de salas lejanas para optimizar memoria RAM. */
+export function evictRoomImages(room: Room): void {
+  const searches = [room.imageSearch, ...room.pieces.map((p) => p.imageSearch)].filter(hasSearch)
+  for (const s of searches) {
+    const key = keyOf(s)
+    const img = settled.get(key)
+    if (img) preloaded.delete(img.src)
+    settled.delete(key)
+    cache.delete(key)
+  }
+  mainSettled.delete(room.id)
+  mainDecisions.delete(room.id)
+}
+
+/**
+ * Precarga dinámica según proximidad al jugador:
+ * - Solo precarga imágenes de salas dentro de distancia <= maxDistance (por defecto 1 salto).
+ * - Desaloja de memoria (evict) salas que quedaron a distancia >= 3.
+ */
+export async function prefetchNearbyPalaceImages(
+  palace: Museum,
+  currentRoomId: string | null,
+  maxDistance = 1,
+): Promise<void> {
+  const current = currentRoomId ?? palace.rooms[0]?.id
+  if (!current) return
+  const graph = buildRoomGraphFromMuseum(palace)
+  const distances = getRoomDistances(current, graph)
+
+  // 1. Salas cercanas (<= maxDistance): precargar
+  const targetRooms = palace.rooms.filter((r) => {
+    const d = distances.get(r.id) ?? (r.id === current ? 0 : 999)
+    return d <= maxDistance
+  })
+  for (const room of targetRooms) registerMain(room)
+
+  const ordered = [
+    ...targetRooms.map((room) => room.imageSearch),
+    ...targetRooms.flatMap((room) => room.pieces.map((p) => p.imageSearch)),
+  ].filter(hasSearch)
+  const seen = new Set<string>()
+  const queue = ordered.filter((s) => {
+    const key = keyOf(s)
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+  let next = 0
+  const worker = async () => {
+    while (next < queue.length) {
+      const image = await fetchResolvedImage(queue[next++])
+      if (image) await preload(image.src)
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(PREFETCH_CONCURRENCY, queue.length) }, worker))
+
+  // 2. Salas lejanas (>= 3): desalojar para ahorrar memoria RAM
+  const farRooms = palace.rooms.filter((r) => {
+    const d = distances.get(r.id)
+    return d !== undefined && d >= 3
+  })
+  for (const room of farRooms) {
+    evictRoomImages(room)
+  }
 }
 
 // Cupo compartido entre todas las salas que llegan en vivo: así 8 salas seguidas no piden 8 × 4 imágenes a la vez.

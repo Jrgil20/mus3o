@@ -8,7 +8,7 @@ import { DEFAULT_THEME, roomPalettes, type Theme } from '../theme'
 import { palaceKey } from '../memory/model'
 import { IntroCamera } from '../intro/IntroCamera'
 import { HideDuringIntro, Reveal } from '../intro/Reveal'
-import { beginIntro, introState } from '../intro/store'
+import { beginIntro, introState, useIntro } from '../intro/store'
 import { BuildSite } from '../intro/BuildSite'
 import { corridorKey } from '../intro/timeline'
 import { AssetDoorway, AssetFloor, AssetWall } from './DungeonAssets'
@@ -21,6 +21,7 @@ import { Player } from './Player'
 import { Room } from './Room'
 import { StaticMerge } from './StaticMerge'
 import { useVr } from '../vr/runtime'
+import { computeRoomAdjacency, getRoomLOD } from '../palace/roomStreaming'
 
 // El mundo de los dioramas (entrar al cuadro) se descarga aparte y solo si alguna sala tiene uno.
 const DioramaRuntime = lazy(() => import('../diorama/DioramaRuntime').then((m) => ({ default: m.DioramaRuntime })))
@@ -110,6 +111,12 @@ function startIntro(layout: PalaceLayout) {
 export function World({ layout, theme = DEFAULT_THEME }: { layout: PalaceLayout; theme?: Theme }) {
   const { scene } = theme
   useMemo(() => startIntro(layout), [layout]) // INTRO: debe decidirse antes del primer frame
+  const isIntroPlaying = useIntro((s) => s.phase === 'playing')
+  const currentRoomId = useStore((s) => s.currentRoomId)
+  const roomAdj = useMemo(
+    () => computeRoomAdjacency(layout.rooms, layout.corridors, layout.stream?.edges),
+    [layout.rooms, layout.corridors, layout.stream?.edges],
+  )
   const building = useStore((s) => s.build.status !== 'idle') // palacio levantado en vivo (también una vez terminado)
   const unlockedDoors = useStore((s) => s.unlockedDoors)
   const freeExplore = useStore((s) => s.freeExplore)
@@ -138,9 +145,13 @@ export function World({ layout, theme = DEFAULT_THEME }: { layout: PalaceLayout;
       {building && <BuildSite />}
       <AtmosphereController layout={layout} theme={theme} />
       <DecayField layout={layout} theme={theme} />
-      {layout.rooms.map((r, i) => (
-        <Room key={r.id} room={r} palette={palettes[i]} theme={theme} />
-      ))}
+      {layout.rooms.map((r, i) => {
+        const lod = isIntroPlaying
+          ? (layout.rooms.length > 8 ? (r.id === layout.rooms[0]?.id ? 'full' : 'shell') : 'full')
+          : getRoomLOD(r.id, currentRoomId, roomAdj, layout.rooms)
+        if (lod === 'hidden') return null
+        return <Room key={r.id} room={r} palette={palettes[i]} theme={theme} shellOnly={lod === 'shell'} />
+      })}
       {layout.corridors.map((c, i) => {
         const isHorizontal = c.floor.w > c.floor.d
         const rotY = isHorizontal ? Math.PI / 2 : 0

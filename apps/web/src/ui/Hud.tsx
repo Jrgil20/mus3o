@@ -3,7 +3,7 @@ import { canOpenDoor, remainingToMemorize } from '../palace/keys'
 import type { PalaceLayout } from '../palace/layout'
 import { pieceKind } from '../palace/pieceKind'
 import type { Piece as Concept } from '@mus3o/shared'
-import { creditLine, prefetchPalaceImages, userImageAsResolved, useResolvedImage } from '../lib/images'
+import { creditLine, prefetchNearbyPalaceImages, prefetchPalaceImages, userImageAsResolved, useResolvedImage } from '../lib/images'
 import { closeCard, interact, toggleMemorize } from '../scene/actions'
 import { pointerLock } from '../scene/pointerLock'
 import { useDueCount, useRoomMemory } from '../memory/hooks'
@@ -123,16 +123,16 @@ function ConceptCard({ concept, palette, roomName }: { concept: Concept; palette
 
 export function Hud({ layout }: { layout: PalaceLayout }) {
   const palace = useStore((s) => s.palace)
+  const currentRoomId = useStore((s) => s.currentRoomId)
   const buildSummary = useStore((s) => s.build.summary) // palacio generado con IA: "N de M verificados"
-  // Precarga las imágenes de todo el palacio para que las fichas se abran al instante.
+  // Precarga dinámica y streaming de imágenes: solo salas cercanas (distancia <= 1) para carga instantánea y RAM ligera.
   useEffect(() => {
-    if (palace) void prefetchPalaceImages(palace)
-  }, [palace])
+    if (palace) void prefetchNearbyPalaceImages(palace, currentRoomId, 1)
+  }, [palace, currentRoomId])
   const mode = useStore((s) => s.mode)
   const locked = useStore((s) => s.locked)
   const memorized = useStore((s) => s.memorized)
   const exam = useStore((s) => s.exam)
-  const currentRoomId = useStore((s) => s.currentRoomId)
   const inDiorama = useDioramaStore((s) => s.phase === 'inside' || s.phase === 'leaving')
   const arisAvailable = useDioramaStore((s) => s.phase === 'room')
 
