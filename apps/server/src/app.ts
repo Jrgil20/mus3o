@@ -27,6 +27,7 @@ import { sttRouter } from "./stt";
 import { assetRouter } from "./assetRoutes";
 import { arisRouter } from "./arisHelp";
 import { photoRouter } from "./photoDiorama";
+import { shareRouter } from "./shareRoutes";
 import { getCached, getCachedDigest, setCached, setCachedDigest } from "./cache";
 import { takeBudget } from "./budgetStore";
 
@@ -69,7 +70,8 @@ app.use("/api", sttRouter);
 app.use("/api", assetRouter);
 app.use("/api", arisRouter);
 app.use("/api", photoRouter);
-app.use("/api/", rateLimit({ skip: (req) => req.originalUrl.startsWith("/api/image") || req.originalUrl.startsWith("/api/info") || req.originalUrl.startsWith("/api/tts") || req.originalUrl.startsWith("/api/stt") || req.originalUrl.startsWith("/api/assets") || req.originalUrl.startsWith("/api/library") || req.originalUrl.startsWith("/api/aris-help") || req.originalUrl.startsWith("/api/health") || req.originalUrl.startsWith("/api/diorama-from-image"), windowMs: 60_000, limit: 10, standardHeaders: true, legacyHeaders: false, message: { error: "Demasiadas solicitudes, intenta en un minuto" } }));
+app.use("/api", shareRouter);
+app.use("/api/", rateLimit({ skip: (req) => req.originalUrl.startsWith("/api/image") || req.originalUrl.startsWith("/api/info") || req.originalUrl.startsWith("/api/tts") || req.originalUrl.startsWith("/api/stt") || req.originalUrl.startsWith("/api/assets") || req.originalUrl.startsWith("/api/library") || req.originalUrl.startsWith("/api/aris-help") || req.originalUrl.startsWith("/api/health") || req.originalUrl.startsWith("/api/diorama-from-image") || req.originalUrl.startsWith("/api/museums"), windowMs: 60_000, limit: 10, standardHeaders: true, legacyHeaders: false, message: { error: "Demasiadas solicitudes, intenta en un minuto" } }));
 
 const RequestSchema = z.union([
   z.object({ topic: z.string().trim().min(1).max(200) }).strict(),

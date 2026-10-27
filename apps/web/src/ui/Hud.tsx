@@ -28,6 +28,8 @@ import { useIsTouch } from './useIsTouch'
 import { useResumeKeys } from './resume'
 import { useLegendShown } from './legend'
 import { routeHintText, routeNext } from '../palace/route'
+import { ShareModal } from './ShareModal'
+import { shareMuseum } from '../lib/shareApi'
 
 function wallVars(p: RoomPalette) {
   return { '--wall': p.wall, '--wall-ink': p.ink } as React.CSSProperties
@@ -207,6 +209,27 @@ export function Hud({ layout }: { layout: PalaceLayout }) {
       ? routeHintText(next)
       : null
   const [moreOptions, setMoreOptions] = useState(false)
+  const [shareUrl, setShareUrl] = useState<string | null>(null)
+  const [sharing, setSharing] = useState(false)
+  const [shareError, setShareError] = useState<string | null>(null)
+
+  const handleShare = async () => {
+    if (!palace || sharing) return
+    setSharing(true)
+    setShareError(null)
+    try {
+      const res = await shareMuseum(palace)
+      if (res.ok && res.url) {
+        setShareUrl(res.url)
+      } else {
+        setShareError(res.error || 'Error al generar enlace de compartir')
+      }
+    } catch (err) {
+      setShareError(err instanceof Error ? err.message : 'Error al conectar con el servidor')
+    } finally {
+      setSharing(false)
+    }
+  }
 
   // Aviso de llave ganada: se muestra unos segundos.
   useEffect(() => {
@@ -395,8 +418,18 @@ export function Hud({ layout }: { layout: PalaceLayout }) {
                     Repasar lo pendiente ({due})
                   </button>
                 )}
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={handleShare}
+                  disabled={sharing}
+                  title="Compartir este museo con un enlace corto"
+                >
+                  {sharing ? 'Compartiendo…' : '🔗 Compartir'}
+                </button>
                 <VrButton />
               </div>
+              {shareError && <p className="hint hint-warn" style={{ marginTop: '0.5rem' }}>{shareError}</p>}
               {/* Lo secundario queda plegado: la pausa se lee de un vistazo. */}
               <button type="button" className="pause-more" aria-expanded={moreOptions} onClick={() => setMoreOptions((v) => !v)}>
                 {moreOptions ? 'Menos opciones ▴' : 'Más opciones ▾'}
@@ -417,6 +450,14 @@ export function Hud({ layout }: { layout: PalaceLayout }) {
             </div>
           </div>
         </div>
+      )}
+
+      {shareUrl && (
+        <ShareModal
+          url={shareUrl}
+          title={palace?.title ?? 'Museo'}
+          onClose={() => setShareUrl(null)}
+        />
       )}
     </div>
   )

@@ -10,6 +10,7 @@ import { EXAMPLE_TEXT } from './palace/example'
 import { parsePalace } from './palace/parse'
 import { hydrateUserImages, useStore } from './store'
 import { DEFAULT_THEME } from './theme'
+import { fetchSharedMuseum, parseShareIdFromLocation } from './lib/shareApi'
 
 // La escena 3D (three, fiber, drei) se carga aparte para no inflar el bundle de la landing.
 const World = lazy(() => import('./scene/World').then((m) => ({ default: m.World })))
@@ -47,6 +48,12 @@ import { TEAM_HASH, useHash } from './ui/useHash'
 export default function App() {
   useEffect(() => {
     void hydrateUserImages()
+    const shareId = parseShareIdFromLocation(window.location)
+    if (shareId && !useStore.getState().palace) {
+      void fetchSharedMuseum(shareId).then((m) => {
+        if (m) useStore.getState().enterPalace(m)
+      })
+    }
   }, [])
 
   const screen = useStore((s) => s.screen)

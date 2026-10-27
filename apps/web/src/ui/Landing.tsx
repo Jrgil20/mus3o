@@ -19,6 +19,7 @@ import { useShowcaseScroll } from './showcase'
 import type { LobbyMode, WalkApi } from '../scene/LobbyWalker'
 import type { FounderTag } from '../scene/founderAim'
 import { touchInput } from '../scene/touchInput'
+import { fetchRecentCommunityMuseums, fetchSharedMuseum, type CommunityMuseum } from '../lib/shareApi'
 
 // La sala 3D se carga aparte para que three.js no bloquee la primera pintura de la landing.
 const RoomPeek = lazy(() => import('../scene/RoomPeek').then((m) => ({ default: m.RoomPeek })))
@@ -51,6 +52,32 @@ export function Landing() {
   const saved = useStore((s) => s.palace)
   // Una sola vez por render: la landing se vuelve a renderizar en cada tecla del editor.
   const dueText = dueLabel(dueCountFor(saved))
+  const [communityMuseums, setCommunityMuseums] = useState<CommunityMuseum[]>([])
+  const [loadingCommunityId, setLoadingCommunityId] = useState<string | null>(null)
+
+  useEffect(() => {
+    let mounted = true
+    void fetchRecentCommunityMuseums().then((museums) => {
+      if (mounted) setCommunityMuseums(museums)
+    })
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  const openCommunityMuseum = async (cm: CommunityMuseum) => {
+    if (loadingCommunityId) return
+    setLoadingCommunityId(cm.id)
+    try {
+      const museum = await fetchSharedMuseum(cm.id)
+      if (museum) {
+        window.history.pushState(null, '', `/m/${cm.id}`)
+        enterPalace(museum, '')
+      }
+    } finally {
+      setLoadingCommunityId(null)
+    }
+  }
   const [input, setInput] = useState(EXAMPLE_TEXT)
   const [fileError, setFileError] = useState<string | null>(null)
   const [sourcesOpen, setSourcesOpen] = useState(false)
@@ -398,6 +425,46 @@ export function Landing() {
         </div>
         <FreeExploreToggleConnected />
       </section>
+
+      {communityMuseums.length > 0 && (
+        <section id="comunidad" className="landing-workbench" style={{ marginTop: '3.5rem', marginBottom: '4rem' }}>
+          <header className="workbench-head">
+            <h2>Museos de la <i>comunidad</i></h2>
+            <p>Descubre y recorre palacios creados y compartidos por otros visitantes.</p>
+          </header>
+          <div
+            className="presets-list"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '14px',
+              padding: 0,
+            }}
+          >
+            {communityMuseums.map((cm) => (
+              <button
+                key={cm.id}
+                type="button"
+                className="preset-card"
+                onClick={() => void openCommunityMuseum(cm)}
+                disabled={loadingCommunityId === cm.id}
+                title={`Entrar a ${cm.title}`}
+              >
+                <div className="preset-card-top">
+                  <span className="preset-badge">🌐 Comunidad</span>
+                </div>
+                <strong className="preset-title">{cm.title}</strong>
+                <p className="preset-subtitle">
+                  {new Date(cm.createdAt).toLocaleDateString('es', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </p>
+                <span className="preset-meta">
+                  {cm.roomCount} {cm.roomCount === 1 ? 'sala' : 'salas'} · {loadingCommunityId === cm.id ? 'Cargando…' : 'Explorar'}
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   )
 }
