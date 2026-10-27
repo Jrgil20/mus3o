@@ -35,8 +35,10 @@ import {
 } from './assets/romanAssets'
 
 import { osteoarticularMuseum, osteoarticularNotes } from './osteoarticularPreset'
+import { computingHistoryMuseum, computingHistoryNotes } from './computingHistoryPreset'
 
 export * from './assets'
+export * from './computingHistoryPreset'
 
 export interface PresetPalace {
   id: string
@@ -426,6 +428,17 @@ const romanEmpireMuseum: Museum = MuseumSchema.parse({
 })
 
 export const PRESET_PALACES: PresetPalace[] = [
+  {
+    id: 'computing-history-master',
+    title: 'Por amor al arte: Historia de la Computación',
+    subtitle: '12 Salas · Pioneros (Turing, Hopper, Lovelace), Máquinas, CPU y Cómputo Cuántico',
+    icon: '💻',
+    themeBadge: 'Obra Maestra (12 Salas)',
+    roomCount: computingHistoryMuseum.rooms.length,
+    conceptCount: computingHistoryMuseum.rooms.reduce((n, r) => n + r.pieces.length, 0),
+    museum: computingHistoryMuseum,
+    sourceText: computingHistoryNotes,
+  },
   {
     id: 'osteoarticular-infections',
     title: 'Infecciones osteoarticulares',

@@ -1,4 +1,5 @@
 export * from './partHelper'
 export * from './pcAssets'
+export * from './computerHistoryAssets'
 export * from './bioAssets'
 export * from './romanAssets'
