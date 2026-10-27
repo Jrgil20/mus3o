@@ -132,7 +132,7 @@ PIECE: Y | box | c | key | e`);
   });
 
   it("recorta a LIMITS.maxRooms y maxPiecesPerRoom sin lanzar ni mezclar piezas", () => {
-    const rooms = Array.from({ length: 15 }, (_, i) => `ROOM: r${i} | Sala ${i} | ancient | #112233 | #000000 | torus |\n` + Array.from({ length: 14 }, (_, j) => `PIECE: P${i}-${j} | box | c | key | e`).join("\n")).join("\n");
+    const rooms = Array.from({ length: LIMITS.maxRooms + 3 }, (_, i) => `ROOM: r${i} | Sala ${i} | ancient | #112233 | #000000 | torus |\n` + Array.from({ length: 14 }, (_, j) => `PIECE: P${i}-${j} | box | c | key | e`).join("\n")).join("\n");
     const m = parseMus3oDSL(rooms);
     expect(m.rooms).toHaveLength(LIMITS.maxRooms);
     expect(m.rooms.every((r) => r.pieces.length === LIMITS.maxPiecesPerRoom)).toBe(true);
@@ -269,7 +269,7 @@ describe("Mus3oDslStream", () => {
   });
 
   it("no emite salas por encima de LIMITS.maxRooms y las piezas sobrantes no se cuelgan de otra sala", () => {
-    const raw = Array.from({ length: 15 }, (_, i) => `ROOM: r${i} | Sala ${i} | ancient | #112233 | #000000 | torus |\nPIECE: P${i} | box | c | key | e`).join("\n");
+    const raw = Array.from({ length: LIMITS.maxRooms + 3 }, (_, i) => `ROOM: r${i} | Sala ${i} | ancient | #112233 | #000000 | torus |\nPIECE: P${i} | box | c | key | e`).join("\n");
     const { s } = run([raw]);
     expect(s.rooms).toHaveLength(LIMITS.maxRooms);
     expect(s.rooms.every((r) => r.pieces.length === 1)).toBe(true);

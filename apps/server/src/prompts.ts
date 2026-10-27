@@ -222,7 +222,7 @@ export function roomPlan(request: { prompt: string; sources: { text: string }[] 
   if (chars <= 800) return { minRooms: 3, maxRooms: 5, minPieces: 3, maxPieces: 5 };
   if (chars <= 4_000) return { minRooms: 4, maxRooms: 6, minPieces: 4, maxPieces: 6 };
   if (chars <= 12_000) return { minRooms: 6, maxRooms: 8, minPieces: 4, maxPieces: 7 };
-  return { minRooms: 9, maxRooms: LIMITS.maxRooms, minPieces: 4, maxPieces: 6 };
+  return { minRooms: 9, maxRooms: 12, minPieces: 4, maxPieces: 6 };
 }
 
 /** Tokens de salida que puede ocupar el DSL del plan (~170 por pieza, +50 si lleva quiz) con holgura. */

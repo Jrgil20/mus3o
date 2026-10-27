@@ -13,8 +13,8 @@ const rot3 = z.tuple([
 /** Límites de contenido compartidos por el server, los parsers y el layout. */
 export const LIMITS = {
   maxNotesChars: 20_000,
-  /** 3 a 12 salas según el volumen de contenido (ver roomPlan en el servidor); 12 solo con mucha documentación. */
-  maxRooms: 12,
+  /** Soporta hasta 48 salas para museos monumentales de libre exploración. */
+  maxRooms: 48,
   maxPiecesPerRoom: 12,
   maxTitle: 80,
   maxText: 400,
@@ -29,8 +29,8 @@ export const LIMITS = {
 /** ~1,5 MB por imagen en base64 (las del cliente van a <= 1024 px). */
 export const MAX_IMAGE_BASE64_CHARS = 2_000_000;
 
-/** Con hasta 12 salas caben el árbol de recorrido (11 aristas) y varias conexiones transversales. */
-export const MAX_EDGES = 28;
+/** Permite hasta 120 aristas para grafos complejos no lineales con múltiples ramas y atajos transversales. */
+export const MAX_EDGES = 120;
 
 export const MuseumModeSchema = z.enum(["exploration", "quiz", "biography", "education"]);
 

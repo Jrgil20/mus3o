@@ -56,7 +56,7 @@ describe('parsePalace', () => {
 
   it('aplica los límites de tamaño', () => {
     expect(parsePalace('x'.repeat(MAX_INPUT_CHARS + 1)).ok).toBe(false)
-    const many = Array.from({ length: 20 }, (_, i) => `# T${i}\n- c`).join('\n')
+    const many = Array.from({ length: LIMITS.maxRooms + 5 }, (_, i) => `# T${i}\n- c`).join('\n')
     const r = ok(many)
     expect(r.palace.rooms).toHaveLength(LIMITS.maxRooms)
     expect(r.warnings.length).toBeGreaterThan(0)

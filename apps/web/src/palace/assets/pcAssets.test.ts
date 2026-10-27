@@ -126,8 +126,8 @@ describe('Biology & Roman Procedural Assets', () => {
 })
 
 describe('PRESET_PALACES procedural models', () => {
-  it('has 4 preset museums, all valid against MuseumSchema', () => {
-    expect(PRESET_PALACES.length).toBe(4)
+  it('has preset museums, all valid against MuseumSchema', () => {
+    expect(PRESET_PALACES.length).toBe(5)
     for (const preset of PRESET_PALACES) {
       expect(() => MuseumSchema.parse(preset.museum)).not.toThrow()
     }
