@@ -2,7 +2,7 @@
   "name": "mus3o-3d",
   "private": true,
   "packageManager": "pnpm@10.33.0",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev": "concurrently -n server,web -c blue,green \"npm run dev -w @mus3o/server\" \"npm run dev -w @mus3o/web\"",
