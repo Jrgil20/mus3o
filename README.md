@@ -1,9 +1,19 @@
-# mus3o · team-5
+# mus3o · team-5 🏆 1er Lugar General (Ganador Platanus Hack 26)
 
-[![Demo en vivo](https://img.shields.io/badge/Demo%20en%20vivo-mus3o.onrender.com-success?style=for-the-badge)](https://mus3o.onrender.com/) ![Track](https://img.shields.io/badge/Track-Three--Dimensional-orange?style=for-the-badge) ![Hackathon](https://img.shields.io/badge/Platanus%20Hack%2026-Caracas%2036h-blueviolet?style=for-the-badge) ![React](https://img.shields.io/badge/React%20Three%20Fiber-3D-blue?style=for-the-badge) ![Anthropic](https://img.shields.io/badge/Anthropic-Claude%205.5-black?style=for-the-badge)
+[![Ganador 1er Lugar](https://img.shields.io/badge/%F0%9F%8F%86%20Platanus%20Hack%2026-1er%20Lugar%20(%231%20de%2022)-gold?style=for-the-badge)](https://hack.platan.us/) [![Demo en vivo](https://img.shields.io/badge/Demo%20en%20vivo-mus3o.onrender.com-success?style=for-the-badge)](https://mus3o.onrender.com/) ![Track](https://img.shields.io/badge/Track-Three--Dimensional-orange?style=for-the-badge) ![React](https://img.shields.io/badge/React%20Three%20Fiber-3D-blue?style=for-the-badge) ![Anthropic](https://img.shields.io/badge/Anthropic-Claude%205.5-black?style=for-the-badge)
 
 <p align="center">
   <img src="./project-logo.png" alt="Logo de mus3o" width="220" />
+</p>
+
+<p align="center">
+  🥇 <strong>PROYECTO GANADOR DEL 1ER LUGAR GENERAL — PLATANUS HACK 26</strong><br/>
+  <strong>Score final ponderado: 80.7 / 100 (#1 de 22 equipos)</strong> · Promedio general: 49.1<br/>
+  <em>#1 en Originalidad (100.0) · #1 en Ejecución (87.2) · #1 en Ambición (82.4) · #1 en Aspecto Técnico (82.4)</em>
+</p>
+
+<p align="center">
+  <img src="./assets/platanus-hack-ganador.png" alt="Resultados oficiales Platanus Hack 26 - mus3o #1 de 22 equipos" width="560" />
 </p>
 
 <p align="center">
