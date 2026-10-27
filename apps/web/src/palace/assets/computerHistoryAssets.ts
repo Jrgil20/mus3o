@@ -201,3 +201,69 @@ export function quantumQubitChamber(): Part[] {
     sphere(0.15, [0, 0.15, 0], '#06b6d4'),
   ]
 }
+
+/** 9. Apollo Guidance Computer (AGC DSKY - Margaret Hamilton) */
+export function apolloGuidanceComputer(): Part[] {
+  return [
+    // Chasis metálico aeroespacial gris
+    box(1.5, 1.2, 0.4, [0, 0.6, 0], '#334155'),
+    // Panel de indicadores electroluminiscentes verde fósforo (alarmas 1201 y 1202)
+    box(0.55, 0.35, 0.05, [-0.35, 0.85, 0.2], '#064e3b'),
+    box(0.48, 0.28, 0.06, [-0.35, 0.85, 0.21], '#22c55e'),
+    // Displays numéricos de 7 segmentos dorados
+    box(0.55, 0.35, 0.05, [0.35, 0.85, 0.2], '#18181b'),
+    box(0.48, 0.06, 0.06, [0.35, 0.94, 0.21], '#f59e0b'),
+    box(0.48, 0.06, 0.06, [0.35, 0.85, 0.21], '#f59e0b'),
+    box(0.48, 0.06, 0.06, [0.35, 0.76, 0.21], '#f59e0b'),
+    // Teclado numérico físico (VERB / NOUN / ENTER / RESET)
+    box(1.3, 0.45, 0.06, [0, 0.35, 0.2], '#1e293b'),
+    box(0.16, 0.1, 0.08, [-0.45, 0.45, 0.22], '#e2e8f0'),
+    box(0.16, 0.1, 0.08, [-0.22, 0.45, 0.22], '#e2e8f0'),
+    box(0.16, 0.1, 0.08, [0.01, 0.45, 0.22], '#e2e8f0'),
+    box(0.16, 0.1, 0.08, [0.24, 0.45, 0.22], '#e2e8f0'),
+    box(0.16, 0.1, 0.08, [0.47, 0.45, 0.22], '#e2e8f0'),
+    // Botón de emergencia Key Release
+    box(0.16, 0.1, 0.08, [-0.45, 0.28, 0.22], '#ef4444'),
+  ]
+}
+
+/** 10. Paisaje Arquitectónico de un Die de CPU (Inside a CPU) */
+export function cpuDieLandscape(): Part[] {
+  return [
+    // Sustrato de silicio base reflectante
+    box(2.2, 0.08, 2.2, [0, 0.04, 0], '#09090b'),
+    // Núcleos de procesamiento (Core Complex)
+    box(0.7, 0.18, 0.7, [-0.5, 0.12, -0.5], '#0284c7'),
+    box(0.7, 0.18, 0.7, [0.5, 0.12, -0.5], '#0284c7'),
+    box(0.7, 0.18, 0.7, [-0.5, 0.12, 0.5], '#0284c7'),
+    box(0.7, 0.18, 0.7, [0.5, 0.12, 0.5], '#0284c7'),
+    // Bloque central de Caché L3 compartida
+    box(0.25, 0.22, 1.8, [0, 0.14, 0], '#00ffcc'),
+    // Pistas de interconexión Infinity Fabric doradas
+    box(1.8, 0.04, 0.08, [0, 0.09, 0], '#ffd700'),
+    box(0.08, 0.04, 1.8, [0, 0.09, 0], '#ffd700'),
+    // Controladores de memoria perimetrales (I/O Die)
+    box(2.0, 0.12, 0.15, [0, 0.1, -0.95], '#f59e0b'),
+    box(2.0, 0.12, 0.15, [0, 0.1, 0.95], '#f59e0b'),
+  ]
+}
+
+/** 11. Monolito del Ciberespacio y Código de Programación */
+export function codeMonolith(): Part[] {
+  return [
+    // Monolito negro azabache vertical
+    box(0.8, 2.2, 0.2, [0, 1.1, 0], '#09090b'),
+    // Líneas de código resplandecientes en sintaxis coloreada
+    box(0.55, 0.04, 0.22, [-0.05, 1.9, 0], '#38bdf8'),
+    box(0.4, 0.04, 0.22, [-0.12, 1.75, 0], '#f43f5e'),
+    box(0.65, 0.04, 0.22, [0, 1.6, 0], '#10b981'),
+    box(0.35, 0.04, 0.22, [-0.15, 1.45, 0], '#f59e0b'),
+    box(0.58, 0.04, 0.22, [-0.03, 1.3, 0], '#a855f7'),
+    box(0.45, 0.04, 0.22, [-0.1, 1.15, 0], '#00ffcc'),
+    box(0.62, 0.04, 0.22, [0.01, 1.0, 0], '#38bdf8'),
+    box(0.38, 0.04, 0.22, [-0.13, 0.85, 0], '#e2e8f0'),
+    box(0.52, 0.04, 0.22, [-0.06, 0.7, 0], '#10b981'),
+    // Base de pedestal de obsidiana
+    box(1.1, 0.12, 0.5, [0, 0.06, 0], '#18181b'),
+  ]
+}
